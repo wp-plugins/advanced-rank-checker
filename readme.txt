@@ -25,7 +25,7 @@ If you seek for any more options for the plugin, please contact me so I can chec
 
 == Installation ==
 
-1. Upload `advanced_rankchecker` to the `/wp-content/plugins/` directory
+1. Upload `advanced-rank-checker` to the `/wp-content/plugins/` directory
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Voila ur done
 
