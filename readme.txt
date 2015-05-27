@@ -19,6 +19,7 @@ You instantly see how many positions your keywords grew or decreased.
 This plugin will be updated weekly to provide as much support as needed.
 
 <strong>Options page</strong>
+
 You can set the dashboard view in the options page.
 If you seek for any more options for the plugin, please contact me so I can check what i can do for u.
 
