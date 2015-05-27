@@ -160,7 +160,7 @@ class rankchecker {
                 
                 echo '<tr>';
                 if(!$hidecheck == true) {
-	                echo '<td><a data-toggle="collapse" data-parent="#accordion" href="#row-'.$row->post_id.'" aria-expanded="true" aria-controls="collapseOne"><img src="http://www.buddyjansen.nl/seochecker/wp-content/plugins/advanced_rankchecker/assets/images/plusteken.png" width="20" height="20" style="position:relative; top:-2px; left:-2px;"></a></td>';
+	                echo '<td><a data-toggle="collapse" data-parent="#accordion" href="#row-'.$row->post_id.'" aria-expanded="true" aria-controls="collapseOne"><img src="'.get_site_url().'/wp-content/plugins/advanced-rank-checker/assets/images/plusteken.png" width="20" height="20" style="position:relative; top:-2px; left:-2px;"></a></td>';
 	            }
 	            echo '<td>'.$row->post_id.'</td>';
                 echo '<td><strong>'.$meta_value['keyword'].'</strong></td>';
