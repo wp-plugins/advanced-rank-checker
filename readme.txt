@@ -20,9 +20,10 @@ This plugin will be updated weekly with better ranking reports so please provide
 2. Activate the plugin through the 'Plugins' menu in WordPress
 3. Voila ur done
 
-== Frequently Asked Questions ==
-
 == Screenshots ==
+1. List of keywords and rankings
+2. Adding keywords to the system
+3. Options page
 
 == Changelog ==
 
