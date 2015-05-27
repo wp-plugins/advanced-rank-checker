@@ -11,8 +11,16 @@ Advanced Rank Checker lets you check your ranking on the keywords you provide to
 
 == Description ==
 
-Advanced Rank Checker lets you check your ranking on the keywords you provide to the system. You can check your keywords ranking once a day.
-This plugin will be updated weekly with better ranking reports so please provide ur feedback!
+<strong>What is Advanced Rank Checker?</strong>
+
+Advanced Rank Checker is a system that lets you check your ranking on the keywords you provide. You can check your keywords ranking once a day.
+You instantly see how many positions your keywords grew or decreased.
+
+This plugin will be updated weekly to provide as much support as needed.
+
+<strong>Options page</strong>
+You can set the dashboard view in the options page.
+If you seek for any more options for the plugin, please contact me so I can check what i can do for u.
 
 == Installation ==
 
