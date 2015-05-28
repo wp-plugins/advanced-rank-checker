@@ -32,12 +32,13 @@ class rankchecker {
 	         wp_register_style( 'bootstrap', plugins_url('assets/css/bootstrap.min.css', __FILE__) );
 	         wp_register_style( 'animate', plugins_url('assets/css/animate.css', __FILE__) );
 	         wp_register_style( 'rankchecker', plugins_url('rankchecker.css', __FILE__) );
-	         wp_register_style( 'rc_dashboard', plugins_url('assets/css/dashboard.css', __FILE__) );
 	         wp_enqueue_style( 'bootstrap' );
 	         wp_enqueue_style( 'animate' );
 	         wp_enqueue_style( 'rankchecker' );
-	         wp_enqueue_style( 'rc_dashboard' );
 	    }
+	    
+	    wp_register_style( 'rc_dashboard', plugins_url('assets/css/dashboard.css', __FILE__) );
+	    wp_enqueue_style( 'rc_dashboard' );
     }
     
     /*
@@ -247,6 +248,7 @@ class rankchecker {
                 echo '</tr>';
                 echo '</tbody>';
                 
+                if (!$hidecheck == true) {
                  ?>
         <tbody id="row-<?php echo $row->post_id; ?>" class="panel-collapse collapse animated lightSpeedIn" role="tabpanel" aria-labelledby="headingOne">
 	        
@@ -268,6 +270,7 @@ class rankchecker {
 	        echo '<td></td>';
 	        echo '</tr>';
 	        
+        }
         }
         
         ?>

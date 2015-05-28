@@ -63,7 +63,7 @@ class rankchecker_options {
 
 	$options = get_option( 'rankchecker_settings' );
 	?>
-	<input type='checkbox' name='rankchecker_settings[rankchecker_checkbox_field_1]' <?php checked( $options['rankchecker_checkbox_field_1'], 1 ); ?> value='0'>
+	<input type='checkbox' name='rankchecker_settings[rankchecker_checkbox_field_1]' <?php checked( $options['rankchecker_checkbox_field_1'], 1 ); ?> value='1'>
 	<?php
 
     }
