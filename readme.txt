@@ -1,6 +1,6 @@
 === Plugin Name ===
 Contributors: buddyjansen
-Tags: seo, rankchecker, rank checker, seo checker
+Tags: seo, rank checker, seo checker, seo, keyword ranking, serp
 Requires at least: 3.0.1
 Tested up to: 4.2.2
 Stable tag: 1.1
