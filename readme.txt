@@ -23,6 +23,9 @@ This plugin will be updated weekly to provide as much support as needed.
 You can set the dashboard view in the options page.
 If you seek for any more options for the plugin, please contact me so I can check what i can do for u.
 
+<strong>Select your country</strong>
+You can now select your own country to search in. The default Google search country is .com, you can change it in the options page.
+
 == Installation ==
 
 1. Upload `advanced-rank-checker` to the `/wp-content/plugins/` directory
