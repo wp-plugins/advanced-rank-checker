@@ -3,11 +3,12 @@
  * Plugin Name: Advanced Rank Checker
  * Plugin URI: http://www.wordpress.com
  * Description: Advanced Rank Checker lets you check your keywords ranking
- * Version: 1.1
+ * Version: 1.2
  * Author: Buddy Jansen
  * Author URI: http://www.buddyjansen.nl
  * License: GPL2
  */
+
 
 class rankchecker {
         
@@ -20,6 +21,7 @@ class rankchecker {
         add_action( 'admin_init', array($this, 'register_scripts'));
         add_action( 'admin_init', array($this, 'register_styles'));
         add_action( 'publish_rankchecker', array($this, 'addpostmeta'));
+        add_action( 'admin_notices', array($this, 'country_notice'));
     }
     
     /*
@@ -47,6 +49,17 @@ class rankchecker {
 	        wp_enqueue_script('customjs', plugins_url('assets/js/customjs.js', __FILE__));
 	    }
     }
+    
+    /*
+	* Notice for country setup
+	*/
+	public function country_notice() {
+		$options = get_option('rankchecker_settings');
+		if($options['rankchecker_select_field_0'] == '0') {
+			echo '<div class="error"><h1>IMPORTANT!</h1>';
+			echo '<p>You have to setup the country of your Google searches first before you continue.<br><a href="'.get_site_url().'/wp-admin/admin.php?page=rankchecker_options">Click here</a> to set the default search country.</p></div>';
+		}
+	}
     
     /*
      * Create custom post type
@@ -91,6 +104,23 @@ class rankchecker {
         // Set global $wpdb for sql connection
         global $wpdb;
         
+        // Get options from options page
+        $options = get_option('rankchecker_settings');
+        
+        // Countries
+        $country = array(
+            '0' => 'com',
+            '1' => 'nl',
+            '2' => 'com',
+            '3' => 'de',
+            '4' => 'fr',
+            '5' => 'it',
+            '6' => 'es',
+            '7' => 'com.tw',
+            '8' => 'ca',
+            '9' => 'com.cn',
+        );
+        
         // Show table with contents
         echo '<h2>Welcome to the Advanced Rank Checker</h2>';
         echo '<p>You can use this system to check your keywords ranking. You can check each keyword once a day.</p>';
@@ -105,6 +135,7 @@ class rankchecker {
         echo '<th>#</th>';
         echo '<th>Keyword</th>';
         echo '<th>Google Ranking</th>';
+        echo '<th>Country</th>';
         echo '<th>Last checked</th>';
         if(!$hidecheck == true) {
             echo '<th>Check</th>';
@@ -189,6 +220,8 @@ class rankchecker {
 
                 echo '<td>'.$meta_value['position'].'<span class="'.$color.'"> ('.$sign.$position_total.') </span></td>';
                 
+                echo '<td>'.$meta_value['country'].'</td>';
+                
                 if ($meta_value['date'] == 'Not checked yet') {
                     echo '<td>'.$meta_value['date'].'</td>';
                 } else {
@@ -230,6 +263,7 @@ class rankchecker {
 	        echo '<td></td>';
 	        echo '<td>'.$meta_results['keyword'].'</td>';
 	        echo '<td>'.$meta_results['position'].'</td>';
+	        echo '<td>'.$meta_results['country'].'</td>';
 	        echo '<td>'.date('d/m/Y H:i:s', $meta_results['date']).'</td>';
 	        echo '<td></td>';
 	        echo '</tr>';
@@ -282,14 +316,33 @@ class rankchecker {
 
                 // Position in Google
                 $position      = 0;
+                
+                // Get options from options page
+                $options = get_option('rankchecker_settings');
+                
+                // Countries
+                $country = array(
+	                '0' => 'com',
+	                '1' => 'nl',
+	                '2' => 'com',
+	                '3' => 'de',
+	                '4' => 'fr',
+	                '5' => 'it',
+	                '6' => 'es',
+	                '7' => 'com.tw',
+	                '8' => 'ca',
+	                '9' => 'com.cn',
+                );
 
                 for($i=0;$i<$total_to_search;$i+=$hits_per_page) {
 
-                    $filename = "http://www.google.com/search?as_q=$query".
+                    $filename = "http://www.google.".$country[$options['rankchecker_select_field_0']]."/search?as_q=$query".
                     "&num=$hits_per_page&hl=en&ie=UTF-8&btnG=Google+Search".
                     "&as_epq=&as_oq=&as_eq=&lr=&as_ft=i&as_filetype=".
                     "&as_qdr=all&as_nlo=&as_nhi=&as_occt=any&as_dt=i".
                     "&as_sitesearch=&safe=images&start=$i";
+                    
+                    
 
                     $var = file_get_contents($filename);
 
@@ -304,6 +357,7 @@ class rankchecker {
                                 'keyword'   =>  $searchquery,
                                 'position'  =>  $position,
                                 'date'      =>  $datetimenow,
+                                'country'	=>	$country[$options['rankchecker_select_field_0']],
                             ));
                             ?>
                             <script type="text/javascript">
@@ -318,6 +372,7 @@ class rankchecker {
                                 'keyword'   =>  $searchquery,
                                 'position'  =>  'Not in top 100',
                                 'date'      =>  $datetimenow,
+                                'country'	=>	$country[$options['rankchecker_select_field_0']],
                             ));
                              ?>
                             <script type="text/javascript">
@@ -339,6 +394,23 @@ class rankchecker {
     public function addpostmeta($post_id) {
         // Get post of lastest created post
         $post = get_post($post_id);
+        
+        // Get options from options page
+        $options = get_option('rankchecker_settings');
+        
+        // Countries
+        $country = array(
+            '0' => 'com',
+            '1' => 'nl',
+            '2' => 'com',
+            '3' => 'de',
+            '4' => 'fr',
+            '5' => 'it',
+            '6' => 'es',
+            '7' => 'com.tw',
+            '8' => 'ca',
+            '9' => 'com.cn',
+        );
         
         $args = array(
           'post_type' => 'rankchecker',  
@@ -373,6 +445,7 @@ class rankchecker {
                     'keyword'       =>          $post->post_title,
                     'position'      =>          'Not checked yet',
                     'date'          =>          'Not checked yet',
+                    'country'		=>	$country[$options['rankchecker_select_field_0']],
                 ));
                
            }

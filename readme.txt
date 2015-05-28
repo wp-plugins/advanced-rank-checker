@@ -3,7 +3,7 @@ Contributors: buddyjansen
 Tags: rank checker, seo checker, seo, keyword ranking, serp
 Requires at least: 3.0.1
 Tested up to: 4.2.2
-Stable tag: 1.1
+Stable tag: 1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -33,8 +33,16 @@ If you seek for any more options for the plugin, please contact me so I can chec
 1. List of keywords and rankings
 2. Adding keywords to the system
 3. Options page
+4. Country selector
 
 == Changelog ==
+
+== 1.2 ==
+<strong>-- Features added --</strong>
+<li>Country Selector</li>
+
+You can now select the country that you want to search on.
+ps; Not all countries are added yet. If your country is not in the list, please contact me so I can add it.
 
 = 1.1 =
 <strong>-- Features added --</strong>
@@ -48,8 +56,3 @@ If you seek for any more options for the plugin, please contact me so I can chec
 
 = 1.0 =
 This version is a stable first version. If you find any bugs please report them.
-
-== Arbitrary section ==
-
-
-== A brief Markdown Example ==
