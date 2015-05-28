@@ -42,8 +42,9 @@ If you seek for any more options for the plugin, please contact me so I can chec
 <li>View history of the keywords</li>
 
 <strong>-- Bugs fixed --</strong>
-<li>Not showing proper results</li>
-<li>Keyword ranking precision</li>
+<li>Showing proper results now</li>
+<li>Keyword ranking precision fixed</li>
+<li>Styles added to proper pages</li>
 
 = 1.0 =
 This version is a stable first version. If you find any bugs please report them.
