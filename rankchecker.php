@@ -3,7 +3,7 @@
  * Plugin Name: Advanced Rank Checker
  * Plugin URI: http://www.wordpress.com
  * Description: Advanced Rank Checker lets you check your keywords ranking
- * Version: 1.0
+ * Version: 1.1
  * Author: Buddy Jansen
  * Author URI: http://www.buddyjansen.nl
  * License: GPL2
@@ -26,22 +26,26 @@ class rankchecker {
      * Register style scripts
      */
     public function register_styles() {
-         wp_register_style( 'bootstrap', plugins_url('assets/css/bootstrap.min.css', __FILE__) );
-         wp_register_style( 'animate', plugins_url('assets/css/animate.css', __FILE__) );
-         wp_register_style( 'rankchecker', plugins_url('rankchecker.css', __FILE__) );
-         wp_register_style( 'rc_dashboard', plugins_url('assets/css/dashboard.css', __FILE__) );
-         wp_enqueue_style( 'bootstrap' );
-         wp_enqueue_style( 'animate' );
-         wp_enqueue_style( 'rankchecker' );
-         wp_enqueue_style( 'rc_dashboard' );
+	    if ($_GET['page'] == 'rank_checker' || $_GET['page'] == 'rankchecker_options') {
+	         wp_register_style( 'bootstrap', plugins_url('assets/css/bootstrap.min.css', __FILE__) );
+	         wp_register_style( 'animate', plugins_url('assets/css/animate.css', __FILE__) );
+	         wp_register_style( 'rankchecker', plugins_url('rankchecker.css', __FILE__) );
+	         wp_register_style( 'rc_dashboard', plugins_url('assets/css/dashboard.css', __FILE__) );
+	         wp_enqueue_style( 'bootstrap' );
+	         wp_enqueue_style( 'animate' );
+	         wp_enqueue_style( 'rankchecker' );
+	         wp_enqueue_style( 'rc_dashboard' );
+	    }
     }
     
     /*
      * Register js scripts
      */
     public function register_scripts() {
-        wp_enqueue_script('bootstrapjs', plugins_url('assets/js/bootstrap.min.js', __FILE__));
-        wp_enqueue_script('customjs', plugins_url('assets/js/customjs.js', __FILE__));
+	    if ($_GET['page'] == 'rank_checker' || $_GET['page'] == 'rankchecker_options') {
+	        wp_enqueue_script('bootstrapjs', plugins_url('assets/js/bootstrap.min.js', __FILE__));
+	        wp_enqueue_script('customjs', plugins_url('assets/js/customjs.js', __FILE__));
+	    }
     }
     
     /*
@@ -91,6 +95,7 @@ class rankchecker {
         echo '<h2>Welcome to the Advanced Rank Checker</h2>';
         echo '<p>You can use this system to check your keywords ranking. You can check each keyword once a day.</p>';
         echo '<p>Did you not add keywords yet? &nbsp;<a href="'.get_site_url().'/wp-admin/edit.php?post_type=rankchecker">Click here</a> to start</p>';
+		echo '<div class="show-warning"></div>';
         echo '<div id="show_dashboard" class="postbox">';
         echo '<table class="table table-striped">';
         echo '<thead><tr>';
@@ -113,6 +118,8 @@ class rankchecker {
         // Get current time
         $datetimenow = time() + 2*60*60;
         
+        // Set counter for plussign button
+        $count = 0;
         // Loop through postmeta
         foreach ($sql as $row) {
 
@@ -128,39 +135,54 @@ class rankchecker {
                 array_push($ids, $row->post_id);
                 
                 // Get second last position results for keywords
-                $sql2 = $wpdb->get_results("SELECT meta_value FROM (SELECT * FROM wp_postmeta ORDER BY post_id DESC) sub WHERE post_id LIKE $row->post_id AND meta_key LIKE 'rankchecker' ORDER BY post_id DESC LIMIT 2");
+                $sql2 = $wpdb->get_results("SELECT meta_value FROM (SELECT * FROM wp_postmeta ORDER BY meta_id DESC) sub WHERE post_id LIKE $row->post_id AND meta_key LIKE 'rankchecker' ORDER BY meta_id DESC LIMIT 3");
                 foreach($sql2 as $test) {
                     $meta_value_info = unserialize($test->meta_value);
-                    $positions[] = $meta_value_info['position'];
-					//print_r($positions);
-                
-                    $positions = array_filter($positions);
-                    $positions = array_values($positions);
-                    
-                    if(count($positions) > 2) {
-                        unset($positions[0]);
-                        $positions = array_values($positions);
-                    }
-                }
-                
-                if($positions[0] != "Not checked yet") {
-                    $position_total = $positions[1] - $positions[0];
-                } else {
-                    $position_total = 100 - $positions[1];
-                }
+                    if($meta_value_info['position'] == 'Not checked yet') {
+						continue;
+					}
 
+                    $positions[] = $meta_value_info['position'];
+
+                }
+                
+                
+                if(count($positions) > 1) {
+                    $position_total = $positions[1] - $positions[0];
+                } elseif(empty($positions)) {
+	                $position_total = 0;
+	            } elseif($positions[0] == 'Not in top 100') {
+		            $position_total = 0;
+		        } else {
+                    $position_total = 100 - $positions[0];
+                }
+                
+                
+                
                 // Set sign and color based on result
                 if ($positions[0] > $positions[1]) {
                     $sign = "";
                     $color = "red";
                 } else {
+	              	$sign = "+";
+                    $color = "green";  
+                }
+                
+                if($positions[1] == '') {
                     $sign = "+";
                     $color = "green";
                 }
                 
+                if($position_total == 0) {
+	                $color = "black";
+                }
+
+                
                 echo '<tr>';
                 if(!$hidecheck == true) {
-	                echo '<td><a data-toggle="collapse" data-parent="#accordion" href="#row-'.$row->post_id.'" aria-expanded="true" aria-controls="collapseOne"><img src="'.get_site_url().'/wp-content/plugins/advanced-rank-checker/assets/images/plusteken.png" width="20" height="20" style="position:relative; top:-2px; left:-2px;"></a></td>';
+	                echo '<td>';
+		                echo '<a class="plussign counter-'.$count.'" data-toggle="collapse" data-parent="#accordion" href="#row-'.$row->post_id.'" aria-expanded="true" aria-controls="collapseOne"><img src="'.get_site_url().'/wp-content/plugins/advanced-rank-checker/assets/images/plusteken.png" width="20" height="20" style="position:relative; top:-2px; left:-2px;"></a>';
+	                echo '</td>';
 	            }
 	            echo '<td>'.$row->post_id.'</td>';
                 echo '<td><strong>'.$meta_value['keyword'].'</strong></td>';
@@ -186,6 +208,8 @@ class rankchecker {
                         echo '<td>'.date("H", $timeleft_total).' hours left</td>';
                     }
                 } 
+                
+                $count++;
 
                 echo '</tr>';
                 echo '</tbody>';
@@ -194,11 +218,13 @@ class rankchecker {
         <tbody id="row-<?php echo $row->post_id; ?>" class="panel-collapse collapse animated lightSpeedIn" role="tabpanel" aria-labelledby="headingOne">
 	        
 	    <?php
-		$sql_all_results = $wpdb->get_results("SELECT meta_value FROM $wpdb->postmeta WHERE $row->post_id LIKE post_id AND meta_key LIKE 'rankchecker'");
+		$sql_all_results = $wpdb->get_results("SELECT meta_value FROM $wpdb->postmeta WHERE $row->post_id LIKE post_id AND meta_key LIKE 'rankchecker' ORDER BY meta_id DESC");
 		array_shift($sql_all_results);
-		array_pop($sql_all_results);
         foreach($sql_all_results as $result) {
 	        $meta_results = unserialize($result->meta_value);
+	        if($meta_results['position'] == 'Not checked yet') {
+				continue;
+			}
 	        echo '<tr>';
 	        echo '<td></td>';
 	        echo '<td></td>';
@@ -207,13 +233,29 @@ class rankchecker {
 	        echo '<td>'.date('d/m/Y H:i:s', $meta_results['date']).'</td>';
 	        echo '<td></td>';
 	        echo '</tr>';
+	        
         }
+        
         ?>
-        </tbody>
-	    <?php
-                
-                
-            }
+			    <!--
+<script>
+				    var count = 0;
+				    
+					jQuery('.plussign').click(function() {
+						if(count < 1) {
+					    count++;
+						jQuery('<div class="alert alert-warning alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button><strong>Message:</strong> You dont have any results to compare yet!</div>').insertAfter(jQuery('.show-warning'));
+						}
+					});
+					
+				</script>
+-->
+			    <?php
+	        ?>
+	        </tbody>
+		    <?php
+	                
+	        }        
         }
         echo '</table>';
         
@@ -290,6 +332,7 @@ class rankchecker {
                 echo 'Something went wrong, please try again.';
             }
         }
+        
     }
     
     // Add postmeta on new post

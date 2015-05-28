@@ -3,7 +3,7 @@ Contributors: buddyjansen
 Tags: seo, rankchecker, rank checker, seo checker
 Requires at least: 3.0.1
 Tested up to: 4.2.2
-Stable tag: 0.1
+Stable tag: 1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -36,7 +36,16 @@ If you seek for any more options for the plugin, please contact me so I can chec
 
 == Changelog ==
 
-= 0.1 =
+= 1.1 =
+<strong>-- Features added --</strong>
+<li>Compare results</li>
+<li>View history of the keywords</li>
+
+<strong>-- Bugs fixed --</strong>
+<li>Not showing proper results</li>
+<li>Keyword ranking precision</li>
+
+= 1.0 =
 This version is a stable first version. If you find any bugs please report them.
 
 == Arbitrary section ==
