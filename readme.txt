@@ -3,7 +3,7 @@ Contributors: buddyjansen
 Tags: rank checker, seo checker, seo, keyword ranking, serp
 Requires at least: 3.0.1
 Tested up to: 4.2.2
-Stable tag: 1.2
+Stable tag: 1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -40,6 +40,13 @@ You can now select your own country to search in. The default Google search coun
 4. Country selector
 
 == Changelog ==
+
+== 1.3 ==
+<strong>-- Features added --</strong>
+<li>Add your own country</li>
+
+<strong>-- Updates --</strong>
+<li>Over 50 countries added</li>
 
 == 1.2 ==
 <strong>-- Features added --</strong>

@@ -3,7 +3,7 @@
  * Plugin Name: Advanced Rank Checker
  * Plugin URI: http://www.wordpress.com
  * Description: Advanced Rank Checker lets you check your keywords ranking
- * Version: 1.2
+ * Version: 1.3
  * Author: Buddy Jansen
  * Author URI: http://www.buddyjansen.nl
  * License: GPL2
@@ -28,38 +28,40 @@ class rankchecker {
      * Register style scripts
      */
     public function register_styles() {
-	    if ($_GET['page'] == 'rank_checker' || $_GET['page'] == 'rankchecker_options') {
-	         wp_register_style( 'bootstrap', plugins_url('assets/css/bootstrap.min.css', __FILE__) );
-	         wp_register_style( 'animate', plugins_url('assets/css/animate.css', __FILE__) );
-	         wp_register_style( 'rankchecker', plugins_url('rankchecker.css', __FILE__) );
-	         wp_enqueue_style( 'bootstrap' );
-	         wp_enqueue_style( 'animate' );
-	         wp_enqueue_style( 'rankchecker' );
-	    }
-	    
-	    wp_register_style( 'rc_dashboard', plugins_url('assets/css/dashboard.css', __FILE__) );
-	    wp_enqueue_style( 'rc_dashboard' );
+        if ($_GET['page'] == 'rank_checker' || $_GET['page'] == 'rankchecker_options') {
+             wp_register_style( 'bootstrap', plugins_url('assets/css/bootstrap.min.css', __FILE__) );
+             wp_register_style( 'animate', plugins_url('assets/css/animate.css', __FILE__) );
+             wp_register_style( 'rankchecker', plugins_url('rankchecker.css', __FILE__) );
+             wp_enqueue_style( 'bootstrap' );
+             wp_enqueue_style( 'animate' );
+             wp_enqueue_style( 'rankchecker' );
+        }
+
+        wp_register_style( 'rc_dashboard', plugins_url('assets/css/dashboard.css', __FILE__) );
+        wp_enqueue_style( 'rc_dashboard' );
     }
     
     /*
      * Register js scripts
      */
     public function register_scripts() {
-	    if ($_GET['page'] == 'rank_checker' || $_GET['page'] == 'rankchecker_options') {
-	        wp_enqueue_script('bootstrapjs', plugins_url('assets/js/bootstrap.min.js', __FILE__));
-	        wp_enqueue_script('customjs', plugins_url('assets/js/customjs.js', __FILE__));
-	    }
+        if ($_GET['page'] == 'rank_checker' || $_GET['page'] == 'rankchecker_options') {
+            wp_enqueue_script('//code.jquery.com/jquery-1.11.3.min.js');
+            wp_enqueue_script('//code.jquery.com/jquery-migrate-1.2.1.min.js');
+            wp_enqueue_script('bootstrapjs', plugins_url('assets/js/bootstrap.min.js', __FILE__));
+            wp_enqueue_script('customjs', plugins_url('assets/js/customjs.js', __FILE__));
+        }
     }
     
     /*
 	* Notice for country setup
 	*/
 	public function country_notice() {
-		$options = get_option('rankchecker_settings');
-		if($options['rankchecker_select_field_0'] == '0') {
-			echo '<div class="error"><h1>IMPORTANT!</h1>';
-			echo '<p>You have to setup the country of your Google searches first before you continue.<br><a href="'.get_site_url().'/wp-admin/admin.php?page=rankchecker_options">Click here</a> to set the default search country.</p></div>';
-		}
+            $options = get_option('rankchecker_settings');
+            if($options['rankchecker_select_field_0'] == '0') {
+                echo '<div class="error"><h1>IMPORTANT!</h1>';
+                echo '<p>You have to setup the country of your Google searches first before you continue.<br><a href="'.get_site_url().'/wp-admin/admin.php?page=rankchecker_options">Click here</a> to set the default search country.</p></div>';
+            }
 	}
     
     /*
@@ -80,7 +82,8 @@ class rankchecker {
             'not_found_in_trash' => __( 'No keywords found in the Trash' ), 
             'parent_item_colon'  => '',
             'menu_name'          => 'Keywords'
-          );
+        );
+        
         $args = array(
           'labels'        => $labels,
           'description'   => 'Show keywords ranking in Google',
@@ -102,26 +105,16 @@ class rankchecker {
     
     // Show ranking of keywords & process
     public function show_ranking($hidecheck) {
+	    
         // Set global $wpdb for sql connection
         global $wpdb;
         
+        $post = array("post_status"  =>  "publish");
+        wp_insert_post($post);
+        
         // Get options from options page
         $options = get_option('rankchecker_settings');
-        
-        // Countries
-        $country = array(
-            '0' => 'com',
-            '1' => 'nl',
-            '2' => 'com',
-            '3' => 'de',
-            '4' => 'fr',
-            '5' => 'it',
-            '6' => 'es',
-            '7' => 'com.tw',
-            '8' => 'ca',
-            '9' => 'com.cn',
-        );
-        
+ 
         // Show table with contents
         echo '<h2>Welcome to the Advanced Rank Checker</h2>';
         echo '<p>You can use this system to check your keywords ranking. You can check each keyword once a day.</p>';
@@ -131,7 +124,7 @@ class rankchecker {
         echo '<table class="table table-striped">';
         echo '<thead><tr>';
         if (!$hidecheck == true) {
-        	echo '<th></th>';
+            echo '<th></th>';
         }
         echo '<th>#</th>';
         echo '<th>Keyword</th>';
@@ -152,6 +145,7 @@ class rankchecker {
         
         // Set counter for plussign button
         $count = 0;
+        
         // Loop through postmeta
         foreach ($sql as $row) {
 
@@ -171,26 +165,23 @@ class rankchecker {
                 foreach($sql2 as $test) {
                     $meta_value_info = unserialize($test->meta_value);
                     if($meta_value_info['position'] == 'Not checked yet') {
-						continue;
-					}
-
+                        continue;
+                    }
+                    
                     $positions[] = $meta_value_info['position'];
-
                 }
                 
                 
                 if(count($positions) > 1) {
                     $position_total = $positions[1] - $positions[0];
                 } elseif(empty($positions)) {
-	                $position_total = 0;
+                    $position_total = 0;
 	            } elseif($positions[0] == 'Not in top 100') {
-		            $position_total = 0;
-		        } else {
+                        $position_total = 0;
+                    } else {
                     $position_total = 100 - $positions[0];
                 }
-                
-                
-                
+
                 // Set sign and color based on result
                 if ($positions[0] > $positions[1]) {
                     $sign = "";
@@ -212,15 +203,14 @@ class rankchecker {
                 
                 echo '<tr>';
                 if(!$hidecheck == true) {
-	                echo '<td>';
-		                echo '<a class="plussign counter-'.$count.'" data-toggle="collapse" data-parent="#accordion" href="#row-'.$row->post_id.'" aria-expanded="true" aria-controls="collapseOne"><img src="'.get_site_url().'/wp-content/plugins/advanced-rank-checker/assets/images/plusteken.png" width="20" height="20" style="position:relative; top:-2px; left:-2px;"></a>';
-	                echo '</td>';
-	            }
-	            echo '<td>'.$row->post_id.'</td>';
-                echo '<td><strong>'.$meta_value['keyword'].'</strong></td>';
-
-                echo '<td>'.$meta_value['position'].'<span class="'.$color.'"> ('.$sign.$position_total.') </span></td>';
+                    echo '<td>';
+                            echo '<a class="plussign counter-'.$count.'" data-toggle="collapse" data-parent="#accordion" href="#row-'.$row->post_id.'" aria-expanded="true" aria-controls="collapseOne"><img src="'.get_site_url().'/wp-content/plugins/advanced-rank-checker/assets/images/plusteken.png" width="20" height="20" style="position:relative; top:-2px; left:-2px;"></a>';
+                    echo '</td>';
+                }
                 
+                echo '<td>'.$row->post_id.'</td>';
+                echo '<td><strong>'.$meta_value['keyword'].'</strong></td>';
+                echo '<td>'.$meta_value['position'].'<span class="'.$color.'"> ('.$sign.$position_total.') </span></td>';
                 echo '<td>'.$meta_value['country'].'</td>';
                 
                 if ($meta_value['date'] == 'Not checked yet') {
@@ -249,56 +239,42 @@ class rankchecker {
                 echo '</tbody>';
                 
                 if (!$hidecheck == true) {
-                 ?>
-        <tbody id="row-<?php echo $row->post_id; ?>" class="panel-collapse collapse animated lightSpeedIn" role="tabpanel" aria-labelledby="headingOne">
-	        
-	    <?php
-		$sql_all_results = $wpdb->get_results("SELECT meta_value FROM $wpdb->postmeta WHERE $row->post_id LIKE post_id AND meta_key LIKE 'rankchecker' ORDER BY meta_id DESC");
-		array_shift($sql_all_results);
-        foreach($sql_all_results as $result) {
-	        $meta_results = unserialize($result->meta_value);
-	        if($meta_results['position'] == 'Not checked yet') {
-				continue;
-			}
-	        echo '<tr>';
-	        echo '<td></td>';
-	        echo '<td></td>';
-	        echo '<td>'.$meta_results['keyword'].'</td>';
-	        echo '<td>'.$meta_results['position'].'</td>';
-	        echo '<td>'.$meta_results['country'].'</td>';
-	        echo '<td>'.date('d/m/Y H:i:s', $meta_results['date']).'</td>';
-	        echo '<td></td>';
-	        echo '</tr>';
-	        
-        }
-        }
+                ?>
+                    <tbody id="row-<?php echo $row->post_id; ?>" class="panel-collapse collapse animated lightSpeedIn" role="tabpanel" aria-labelledby="headingOne">
+
+                    <?php
+                    $sql_all_results = $wpdb->get_results("SELECT meta_value FROM $wpdb->postmeta WHERE $row->post_id LIKE post_id AND meta_key LIKE 'rankchecker' ORDER BY meta_id DESC");
+                    array_shift($sql_all_results);
+                    foreach($sql_all_results as $result) {
+                        $meta_results = unserialize($result->meta_value);
+                        if($meta_results['position'] == 'Not checked yet') {
+                            continue;
+                        }
+                        echo '<tr>';
+                        echo '<td></td>';
+                        echo '<td></td>';
+                        echo '<td>'.$meta_results['keyword'].'</td>';
+                        echo '<td>'.$meta_results['position'].'</td>';
+                        echo '<td>'.$meta_results['country'].'</td>';
+                        echo '<td>'.date('d/m/Y H:i:s', $meta_results['date']).'</td>';
+                        echo '<td></td>';
+                        echo '</tr>';  
+                    }
+                }
         
-        ?>
-			    <!--
-<script>
-				    var count = 0;
-				    
-					jQuery('.plussign').click(function() {
-						if(count < 1) {
-					    count++;
-						jQuery('<div class="alert alert-warning alert-dismissible fade in" role="alert"><button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">×</span></button><strong>Message:</strong> You dont have any results to compare yet!</div>').insertAfter(jQuery('.show-warning'));
-						}
-					});
-					
-				</script>
--->
-			    <?php
-	        ?>
-	        </tbody>
-		    <?php
+                ?>
+
+                </tbody>
+                <?php
 	                
-	        }        
+            }        
         }
         echo '</table>';
         
        
         echo '</div>';
-        
+        $rankchecker_options = new rankchecker_options();
+        $countries = $rankchecker_options->countries(); 
         
         // Form process
         if ($_POST['submit']) {
@@ -324,29 +300,17 @@ class rankchecker {
                 $options = get_option('rankchecker_settings');
                 
                 // Countries
-                $country = array(
-	                '0' => 'com',
-	                '1' => 'nl',
-	                '2' => 'com',
-	                '3' => 'de',
-	                '4' => 'fr',
-	                '5' => 'it',
-	                '6' => 'es',
-	                '7' => 'com.tw',
-	                '8' => 'ca',
-	                '9' => 'com.cn',
-                );
+                $rankchecker_options = new rankchecker_options();
+                $countries = $rankchecker_options->countries(); 
 
                 for($i=0;$i<$total_to_search;$i+=$hits_per_page) {
 
-                    $filename = "http://www.google.".$country[$options['rankchecker_select_field_0']]."/search?as_q=$query".
+                    $filename = "http://www.google.".$countries[$options['rankchecker_select_field_0']]."/search?as_q=$query".
                     "&num=$hits_per_page&hl=en&ie=UTF-8&btnG=Google+Search".
                     "&as_epq=&as_oq=&as_eq=&lr=&as_ft=i&as_filetype=".
                     "&as_qdr=all&as_nlo=&as_nhi=&as_occt=any&as_dt=i".
                     "&as_sitesearch=&safe=images&start=$i";
                     
-                    
-
                     $var = file_get_contents($filename);
 
                     // split the page code by "<h3 class" which tops each result
@@ -357,10 +321,10 @@ class rankchecker {
 
                         if (strpos($fileparts[$f], $searchurl)) {
                             add_post_meta( $_POST['keyword_id'], 'rankchecker', array(
-                                'keyword'   =>  $searchquery,
-                                'position'  =>  $position,
-                                'date'      =>  $datetimenow,
-                                'country'	=>	$country[$options['rankchecker_select_field_0']],
+                                'keyword'       =>      $searchquery,
+                                'position'      =>      $position,
+                                'date'          =>      $datetimenow,
+                                'country'	=>	$countries[$options['rankchecker_select_field_0']],
                             ));
                             ?>
                             <script type="text/javascript">
@@ -372,10 +336,10 @@ class rankchecker {
 
                         if ($position > '99') {
                              add_post_meta( $_POST['keyword_id'], 'rankchecker', array(
-                                'keyword'   =>  $searchquery,
-                                'position'  =>  'Not in top 100',
-                                'date'      =>  $datetimenow,
-                                'country'	=>	$country[$options['rankchecker_select_field_0']],
+                                'keyword'       =>      $searchquery,
+                                'position'      =>      'Not in top 100',
+                                'date'          =>      $datetimenow,
+                                'country'	=>	$countries[$options['rankchecker_select_field_0']],
                             ));
                              ?>
                             <script type="text/javascript">
@@ -395,29 +359,17 @@ class rankchecker {
     
     // Add postmeta on new post
     public function addpostmeta($post_id) {
+
         // Get post of lastest created post
         $post = get_post($post_id);
         
         // Get options from options page
         $options = get_option('rankchecker_settings');
         
+
         // Countries
-        $country = array(
-            '0' => 'com',
-            '1' => 'nl',
-            '2' => 'com',
-            '3' => 'de',
-            '4' => 'fr',
-            '5' => 'it',
-            '6' => 'es',
-            '7' => 'com.tw',
-            '8' => 'ca',
-            '9' => 'com.cn',
-        );
-        
-        $args = array(
-          'post_type' => 'rankchecker',  
-        );
+        $rankchecker_options = new rankchecker_options();
+        $countries = $rankchecker_options->countries(); 
         
        // Get all posts where post-type is rankchecker 
        $all_posts = get_posts($args);
@@ -425,7 +377,6 @@ class rankchecker {
        if(count($all_posts) > 1) {
             // Unset first element because that is the new post we just created
             unset($all_posts[0]);
-
        }
        
        // Sort elements again so it starts at 0
@@ -445,10 +396,10 @@ class rankchecker {
            } else {
                 // Add post meta for last keyword
                 add_post_meta($post_id, 'rankchecker', array(
-                    'keyword'       =>          $post->post_title,
-                    'position'      =>          'Not checked yet',
-                    'date'          =>          'Not checked yet',
-                    'country'		=>	$country[$options['rankchecker_select_field_0']],
+                    'keyword'           =>          $post->post_title,
+                    'position'          =>          'Not checked yet',
+                    'date'              =>          'Not checked yet',
+                    'country'		=>          $countries[$options['rankchecker_select_field_0']],
                 ));
                
            }
