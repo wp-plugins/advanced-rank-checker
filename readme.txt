@@ -27,6 +27,9 @@ If you seek for any more options for the plugin, please contact me so I can chec
 
 You can now select your own country to search in. The default Google search country is .com, you can change it in the options page.
 
+<strong>Add your own country</strong>
+You are now able to add your own country. The country list has over 50 supported countries now. If you can’t find your country in the list, just add your own one.
+
 == Installation ==
 
 1. Upload `advanced-rank-checker` to the `/wp-content/plugins/` directory
