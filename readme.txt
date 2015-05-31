@@ -1,4 +1,4 @@
-=== Plugin Name ===
+﻿=== Plugin Name ===
 Contributors: buddyjansen
 Tags: rank checker, seo checker, seo, keyword ranking, serp
 Requires at least: 3.0.1
@@ -44,14 +44,14 @@ You are now able to add your own country. The country list has over 50 supported
 
 == Changelog ==
 
-== 1.3 ==
+= 1.3 =
 <strong>-- Features added --</strong>
 <li>Add your own country</li>
 
 <strong>-- Updates --</strong>
 <li>Over 50 countries added</li>
 
-== 1.2 ==
+= 1.2 =
 <strong>-- Features added --</strong>
 <li>Country Selector</li>
 
