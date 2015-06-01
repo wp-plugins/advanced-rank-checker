@@ -3,7 +3,7 @@
  * Plugin Name: Advanced Rank Checker
  * Plugin URI: http://www.wordpress.com
  * Description: Advanced Rank Checker lets you check your keywords ranking
- * Version: 1.3.3
+ * Version: 1.3.4
  * Author: Buddy Jansen
  * Author URI: http://www.buddyjansen.nl
  * License: GPL2
@@ -174,12 +174,18 @@ class rankchecker {
                 
                 if(count($positions) > 1) {
                     $position_total = $positions[1] - $positions[0];
-                } elseif(empty($positions)) {
+                } 
+                
+                if(empty($positions)) {
                     $position_total = 0;
-	            } elseif($positions[0] == 'Not in top 100') {
-                        $position_total = 0;
-                    } else {
-                    $position_total = 100 - $positions[0];
+	            }
+	            
+	            if($positions[0] == 'Not in top 100') {
+                    $position_total = 100 - $positions[1];
+                }
+                
+                if($positions[1] == 'Not in top 100') {
+	                $position_total = 100 - $positions[0];
                 }
 
                 // Set sign and color based on result
@@ -191,9 +197,20 @@ class rankchecker {
                     $color = "green";  
                 }
                 
-                if($positions[1] == '') {
+                
+                
+                if($positions[1] == '' || $positions[1] == 'Not in top 100') {
                     $sign = "+";
                     $color = "green";
+                }
+                
+                if($positions[0] == 'Not in top 100' && $positions[1] < 100) {
+	                $color = "red";
+	                $sign = "-";
+                }
+                
+                if($positions[0] == 'Not in top 100' && $positions[1] == 'Not in top 100') {
+	                $color = "black";
                 }
                 
                 if($position_total == 0) {
@@ -226,11 +243,11 @@ class rankchecker {
                 
                 // check whether 24 hours has passed
                 if(!$hidecheck == true) {
-                    if($timeleft > $day) {
+                    //if($timeleft > $day) {
                         echo '<td><form action="" method="POST"><input type="hidden" name="keyword_id" value="'.$row->post_id.'"><input type="hidden" name="keyword" value="'.$meta_value['keyword'].'"><input type="submit" name="submit" value="Check"></form></td>';
-                    } else {
+                    //} else {
                         echo '<td>'.date("H", $timeleft_total).' hours left</td>';
-                    }
+                    //}
                 } 
                 
                 $count++;
@@ -315,40 +332,36 @@ class rankchecker {
 
                     // split the page code by "<h3 class" which tops each result
                     $fileparts = explode("<h3 class=", $var);
-
-                    for ($f=1; $f<sizeof($fileparts); $f++) {
-                        $position++;
-
-                        if (strpos($fileparts[$f], $searchurl)) {
-                            add_post_meta( $_POST['keyword_id'], 'rankchecker', array(
-                                'keyword'       =>      $searchquery,
-                                'position'      =>      $position,
-                                'date'          =>      $datetimenow,
-                                'country'	=>	$countries[$options['rankchecker_select_field_0']],
-                            ));
-                            ?>
-                            <script type="text/javascript">
-                            location.reload();
-                            </script>
-                            <?php
-                            break;
-                        }
-
-                        if ($position > '99') {
-                             add_post_meta( $_POST['keyword_id'], 'rankchecker', array(
-                                'keyword'       =>      $searchquery,
-                                'position'      =>      'Not in top 100',
-                                'date'          =>      $datetimenow,
-                                'country'	=>	$countries[$options['rankchecker_select_field_0']],
-                            ));
-                             ?>
-                            <script type="text/javascript">
-                            location.reload();
-                            </script>
-                            <?php
-                            break;
-                        }
-                    } 
+					if(!empty($var)) {
+	                    for ($f=1; $f<sizeof($fileparts); $f++) {
+	                        $position++;
+	
+	                        if (strpos($fileparts[$f], $searchurl)) {
+	                            add_post_meta( $_POST['keyword_id'], 'rankchecker', array(
+	                                'keyword'       =>      $searchquery,
+	                                'position'      =>      $position,
+	                                'date'          =>      $datetimenow,
+	                                'country'	=>	$countries[$options['rankchecker_select_field_0']],
+	                            ));
+	                            echo("<meta http-equiv='refresh' content='1'>");
+	                            break;
+	                        }
+	
+	                        if ($position > '99') {
+	                             add_post_meta( $_POST['keyword_id'], 'rankchecker', array(
+	                                'keyword'       =>      $searchquery,
+	                                'position'      =>      'Not in top 100',
+	                                'date'          =>      $datetimenow,
+	                                'country'	=>	$countries[$options['rankchecker_select_field_0']],
+	                            ));
+	                            echo("<meta http-equiv='refresh' content='1'>");
+	                            break;
+	                        }
+	                    }
+	                } else {
+		                echo '<div class="alert alert-danger">It seems like you checked the Google results too many times. Please try again in an hour!</div>';
+	                    break;
+	                } 
                 }
             } else {
                 echo 'Something went wrong, please try again.';
