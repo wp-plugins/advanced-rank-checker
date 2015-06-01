@@ -3,7 +3,7 @@
  * Plugin Name: Advanced Rank Checker
  * Plugin URI: http://www.wordpress.com
  * Description: Advanced Rank Checker lets you check your keywords ranking
- * Version: 1.3
+ * Version: 1.3.1
  * Author: Buddy Jansen
  * Author URI: http://www.buddyjansen.nl
  * License: GPL2
@@ -58,7 +58,7 @@ class rankchecker {
 	*/
 	public function country_notice() {
             $options = get_option('rankchecker_settings');
-            if($options['rankchecker_select_field_0'] == '0') {
+            if($options['rankchecker_select_field_0'] == '0' || empty($options['rankchecker_select_field_0'])) {
                 echo '<div class="error"><h1>IMPORTANT!</h1>';
                 echo '<p>You have to setup the country of your Google searches first before you continue.<br><a href="'.get_site_url().'/wp-admin/admin.php?page=rankchecker_options">Click here</a> to set the default search country.</p></div>';
             }

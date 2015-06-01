@@ -97,8 +97,11 @@ class rankchecker_options {
             }
 	?>
 	</select>
-
 	<?php
+		
+		if(empty($options['rankchecker_select_field_0'])) {
+			echo 'test';
+		}
 
     }
     
