@@ -243,11 +243,11 @@ class rankchecker {
                 
                 // check whether 24 hours has passed
                 if(!$hidecheck == true) {
-                    //if($timeleft > $day) {
+                    if($timeleft > $day) {
                         echo '<td><form action="" method="POST"><input type="hidden" name="keyword_id" value="'.$row->post_id.'"><input type="hidden" name="keyword" value="'.$meta_value['keyword'].'"><input type="submit" name="submit" value="Check"></form></td>';
-                    //} else {
+                    } else {
                         echo '<td>'.date("H", $timeleft_total).' hours left</td>';
-                    //}
+                    }
                 } 
                 
                 $count++;
