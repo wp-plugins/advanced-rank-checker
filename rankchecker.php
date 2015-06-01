@@ -3,7 +3,7 @@
  * Plugin Name: Advanced Rank Checker
  * Plugin URI: http://www.wordpress.com
  * Description: Advanced Rank Checker lets you check your keywords ranking
- * Version: 1.3.2
+ * Version: 1.3.3
  * Author: Buddy Jansen
  * Author URI: http://www.buddyjansen.nl
  * License: GPL2
