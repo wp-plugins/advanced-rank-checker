@@ -3,7 +3,7 @@ Contributors: buddyjansen
 Tags: rank checker, seo checker, seo, keyword ranking, serp
 Requires at least: 3.0.1
 Tested up to: 4.2.2
-Stable tag: 1.3.4
+Stable tag: 1.3.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -44,6 +44,10 @@ You are now able to add your own country. The country list has over 50 supported
 4. Country selector
 
 == Changelog ==
+
+= 1.3.5 =
+<strong>-- Bug fixed --</strong>
+<li>Did not compare the first results</li>
 
 = 1.3.4 =
 <strong>-- Bug fixed --</strong>

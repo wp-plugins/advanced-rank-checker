@@ -3,7 +3,7 @@
  * Plugin Name: Advanced Rank Checker
  * Plugin URI: http://www.wordpress.com
  * Description: Advanced Rank Checker lets you check your keywords ranking
- * Version: 1.3.4
+ * Version: 1.3.5
  * Author: Buddy Jansen
  * Author URI: http://www.buddyjansen.nl
  * License: GPL2
@@ -187,6 +187,10 @@ class rankchecker {
                 if($positions[1] == 'Not in top 100') {
 	                $position_total = 100 - $positions[0];
                 }
+                
+                if($positions[1] == '') {
+	                $position_total = 100 - $positions[0];
+                }
 
                 // Set sign and color based on result
                 if ($positions[0] > $positions[1]) {
@@ -243,11 +247,11 @@ class rankchecker {
                 
                 // check whether 24 hours has passed
                 if(!$hidecheck == true) {
-                    if($timeleft > $day) {
+                    //if($timeleft > $day) {
                         echo '<td><form action="" method="POST"><input type="hidden" name="keyword_id" value="'.$row->post_id.'"><input type="hidden" name="keyword" value="'.$meta_value['keyword'].'"><input type="submit" name="submit" value="Check"></form></td>';
-                    } else {
+                    //} else {
                         echo '<td>'.date("H", $timeleft_total).' hours left</td>';
-                    }
+                    //}
                 } 
                 
                 $count++;
