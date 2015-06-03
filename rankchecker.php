@@ -363,7 +363,7 @@ class rankchecker {
 	                        }
 	                    }
 	                } else {
-		                echo '<div class="alert alert-danger">It seems like you checked the Google results too many times. Please try again in an hour!</div>';
+		                echo '<div class="alert alert-danger">It seems like you checked the Google results too many times. Please try again in an hour! If this error keeps showing, please contact your webhosting master. Your IP may be blocked by the Google Search System.</div>';
 	                    break;
 	                } 
                 }
