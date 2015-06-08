@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Advanced Rank Checker
- * Plugin URI: http://www.wordpress.com
+ * Plugin URI: https://wordpress.org/plugins/advanced-rank-checker/
  * Description: Advanced Rank Checker lets you check your keywords ranking
  * Version: 1.3.5
  * Author: Buddy Jansen
- * Author URI: http://www.buddyjansen.nl
+ * Author URI: https://wordpress.org/plugins/advanced-rank-checker/
  * License: GPL2
  */
 
