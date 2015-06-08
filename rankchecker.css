@@ -275,6 +275,6 @@ input[type="submit"]:hover {
 
 .spinner-position {
 	position:absolute !important;
-	left:45%;
-	top:300px;
+	left:45% !important;
+	top:300px !important;
 }
