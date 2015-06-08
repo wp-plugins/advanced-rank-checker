@@ -272,3 +272,9 @@ input[type="submit"]:hover {
 .add_country {
 	margin-top:15px;
 }
+
+.spinner-position {
+	position:absolute !important;
+	left:45%;
+	top:300px;
+}

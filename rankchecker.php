@@ -3,7 +3,7 @@
  * Plugin Name: Advanced Rank Checker
  * Plugin URI: https://wordpress.org/plugins/advanced-rank-checker/
  * Description: Advanced Rank Checker lets you check your keywords ranking
- * Version: 1.3.5
+ * Version: 1.3.6
  * Author: Buddy Jansen
  * Author URI: https://wordpress.org/plugins/advanced-rank-checker/
  * License: GPL2
@@ -32,9 +32,11 @@ class rankchecker {
              wp_register_style( 'bootstrap', plugins_url('assets/css/bootstrap.min.css', __FILE__) );
              wp_register_style( 'animate', plugins_url('assets/css/animate.css', __FILE__) );
              wp_register_style( 'rankchecker', plugins_url('rankchecker.css', __FILE__) );
+             wp_register_style( 'spinner', plugins_url('assets/css/spinner.css', __FILE__));
              wp_enqueue_style( 'bootstrap' );
              wp_enqueue_style( 'animate' );
              wp_enqueue_style( 'rankchecker' );
+             wp_enqueue_style( 'spinner' );
         }
 
         wp_register_style( 'rc_dashboard', plugins_url('assets/css/dashboard.css', __FILE__) );
@@ -161,7 +163,7 @@ class rankchecker {
                 array_push($ids, $row->post_id);
                 
                 // Get second last position results for keywords
-                $sql2 = $wpdb->get_results("SELECT meta_value FROM (SELECT * FROM wp_postmeta ORDER BY meta_id DESC) sub WHERE post_id LIKE $row->post_id AND meta_key LIKE 'rankchecker' ORDER BY meta_id DESC LIMIT 3");
+                $sql2 = $wpdb->get_results("SELECT meta_value FROM (SELECT * FROM $wpdb->postmeta ORDER BY meta_id DESC) sub WHERE post_id LIKE $row->post_id AND meta_key LIKE 'rankchecker' ORDER BY meta_id DESC LIMIT 3");
                 foreach($sql2 as $test) {
                     $meta_value_info = unserialize($test->meta_value);
                     if($meta_value_info['position'] == 'Not checked yet') {
@@ -299,7 +301,13 @@ class rankchecker {
         
         // Form process
         if ($_POST['submit']) {
-
+	        
+	        ?>
+			<div class="three-quarters-loader spinner-position">
+				Loading…
+			</div>
+			<?php
+			
             $searchquery = $_POST['keyword'];
             $searchurl = $_SERVER['HTTP_HOST'];
 
@@ -325,14 +333,20 @@ class rankchecker {
                 $countries = $rankchecker_options->countries(); 
 
                 for($i=0;$i<$total_to_search;$i+=$hits_per_page) {
-
-                    $filename = "http://www.google.".$countries[$options['rankchecker_select_field_0']]."/search?as_q=$query".
+					
+					// Curl
+                    $ch = curl_init();
+					$timeout = 5; // set to zero for no timeout
+					curl_setopt ($ch, CURLOPT_URL, "http://www.google.".$countries[$options['rankchecker_select_field_0']]."/search?as_q=$query".
                     "&num=$hits_per_page&hl=en&ie=UTF-8&btnG=Google+Search".
                     "&as_epq=&as_oq=&as_eq=&lr=&as_ft=i&as_filetype=".
                     "&as_qdr=all&as_nlo=&as_nhi=&as_occt=any&as_dt=i".
-                    "&as_sitesearch=&safe=images&start=$i";
-                    
-                    $var = file_get_contents($filename);
+                    "&as_sitesearch=&safe=images&start=$i");
+					curl_setopt ($ch, CURLOPT_RETURNTRANSFER, 1);
+					curl_setopt ($ch, CURLOPT_CONNECTTIMEOUT, $timeout);
+					$var = curl_exec($ch);
+					curl_close($ch);
+                          
 
                     // split the page code by "<h3 class" which tops each result
                     $fileparts = explode("<h3 class=", $var);
